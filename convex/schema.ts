@@ -1,17 +1,14 @@
-// OPTIONAL: Rename this file to `schema.ts` to declare the shape
-// of the data in your database.
-// See https://docs.convex.dev/database/schemas.
-
 import { defineSchema, defineTable } from "convex/server";
+import { authTables } from "@convex-dev/convex-lucia-auth";
 import { v } from "convex/values";
 
 export default defineSchema(
   {
-    documents: defineTable({
-      fieldOne: v.string(),
-      fieldTwo: v.object({
-        subFieldOne: v.array(v.number()),
-      }),
+    ...authTables({
+      user: {
+        email: v.string(),
+      },
+      session: {},
     }),
     // This definition matches the example query and mutation code:
     numbers: defineTable({
