@@ -1,12 +1,13 @@
 import { v } from "convex/values";
 import { query, mutation, action } from "./_generated/server";
 import { api } from "./_generated/api";
+import { queryWithAuth } from "@convex-dev/convex-lucia-auth";
 
 // Write your Convex functions in any file inside this directory (`convex`).
 // See https://docs.convex.dev/functions for more.
 
 // You can read data from the database via a query:
-export const listNumbers = query({
+export const listNumbers = queryWithAuth({
   // Validators for arguments.
   args: {
     count: v.number(),
@@ -17,7 +18,10 @@ export const listNumbers = query({
     //// Read the database as many times as you need here.
     //// See https://docs.convex.dev/database/reading-data.
     const numbers = await ctx.db.query("numbers").take(args.count);
-    return numbers.map((number) => number.value);
+    return {
+      viewer: ctx.session?.user.email,
+      numbers: numbers.map((number) => number.value),
+    };
   },
 });
 
@@ -60,6 +64,7 @@ export const myAction = action({
     //// Query data by running Convex queries.
     const data = await ctx.runQuery(api.myFunctions.listNumbers, {
       count: 10,
+      sessionId: null,
     });
     console.log(data);
 
