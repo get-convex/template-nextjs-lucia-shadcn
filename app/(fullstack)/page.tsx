@@ -94,7 +94,7 @@ function AuthForm() {
       <SignUpSignIn
         signIn={signIn}
         signUp={signUp}
-        onError={(flow, error) => {
+        onError={(flow) => {
           alert(
             flow === "signIn"
               ? "Could not sign in, did you mean to sign up?"
